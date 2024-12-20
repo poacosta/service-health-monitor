@@ -12,5 +12,6 @@ services_config = [
     name = "Frontend App"
     url = "https://app.example.com"
     type = "frontend"
+    timeout = 30
   }
 ]

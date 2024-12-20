@@ -60,18 +60,21 @@ environment       = "production"
 slack_webhook_url = "https://hooks.slack.com/services/your/webhook/url"
 services_config = [
   {
-    name    = "Backend API"
-    url     = "https://api.example.com/health"
-    type    = "backend"
-    timeout = 30
+    name            = "Backend API"
+    url             = "https://api.example.com/health"
+    type            = "backend"
+    timeout         = 30
+    expected_status = 200
     custom_headers = {
-      "Authorization" = "Bearer your-token"
+      "Authorization" = "Bearer your-token-if-needed"
     }
   },
   {
-    name = "Frontend App"
-    url  = "https://app.example.com"
-    type = "frontend"
+    name            = "Frontend App"
+    url             = "https://app.example.com"
+    type            = "frontend"
+    timeout         = 30
+    expected_status = 200
   }
 ]
 ```
@@ -80,7 +83,8 @@ services_config = [
 
 ```bash
 cd terraform
-terraform init
+terraform init -upgrade
+terraform plan
 terraform apply
 ```
 
@@ -95,7 +99,7 @@ terraform apply
 
 ### Service Configuration
 
-Each service in your `services_config` can have:
+Each service in your `terraform.tfvars` can have:
 
 - `name`: Service identifier
 - `url`: Health check endpoint
@@ -113,6 +117,10 @@ schedule_expression = "rate(5 minutes)"  # Default
 # OR
 schedule_expression = "cron(0/15 * * * ? *)"  # Every 15 minutes
 ```
+
+### Config Example
+
+📓 [terraform.tfvars.example](terraform/terraform.tfvars.example)
 
 ## 🏗 Architecture
 

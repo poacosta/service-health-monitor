@@ -129,6 +129,8 @@ cp src/lambda_function.py dist/
 cd dist && zip -r lambda_function.zip . && cd ..
 ```
 
+ℹ️ These commands are also available in [reset-dist.sh](utils/reset-dist.sh) at [utils](utils) folder for convenience.
+
 #### The Anatomy of Your dist Folder 🔍
 
 After running these commands, your `dist` folder should look something like this:
@@ -215,5 +217,5 @@ ls -lh dist/lambda_function.zip  # Should be under 50MB
 
 ## What's Next? 🎬
 
-With all prerequisites satisfied, head back to the main README.md to start building your monitoring system. Remember, a
+With all prerequisites satisfied, head back to the main [README.md](README.md) to start building your monitoring system. Remember, a
 solid foundation makes for a stable house... or in this case, a reliable monitoring system!

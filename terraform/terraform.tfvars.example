@@ -1,0 +1,16 @@
+project_name = "your-project"
+environment = "production"
+slack_webhook_url = "your-webhook-url"
+services_config = [
+  {
+    name = "Backend API"
+    url = "https://api.example.com/health"
+    type = "backend"
+    timeout = 30
+  },
+  {
+    name = "Frontend App"
+    url = "https://app.example.com"
+    type = "frontend"
+  }
+]

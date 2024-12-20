@@ -7,11 +7,13 @@ services_config = [
     url = "https://api.example.com/health"
     type = "backend"
     timeout = 30
+    expected_status = 200
   },
   {
     name = "Frontend App"
     url = "https://app.example.com"
     type = "frontend"
     timeout = 30
+    expected_status = 200
   }
 ]

@@ -125,6 +125,7 @@ class HealthChecker:
                         ssl=True
                 ) as response:
                     elapsed = (datetime.now() - start_time).total_seconds()
+                    expected_status = service.expected_status or 200
                     is_healthy = response.status == service.expected_status
 
                     if is_healthy:
@@ -140,7 +141,7 @@ class HealthChecker:
                         "status": "healthy" if is_healthy else "unhealthy",
                         "response_time": elapsed,
                         "status_code": response.status,
-                        "expected_status": service.expected_status,
+                        "expected_status": expected_status,
                         "attempt": attempt + 1,
                         "timestamp": datetime.now().isoformat()
                     }
@@ -343,12 +344,18 @@ def get_services() -> List[Service]:
                     f"Expected a positive number, got: {config.get('timeout')}"
                 )
 
+            # Expected status validation
+            expected_status = config.get('expected_status')
+            if expected_status is None:
+                expected_status = 200  # Default to HTTP 200 OK
+                logger.info(f"No expected status specified for {config['name']}, using default: 200")
+
             services.append(Service(
                 name=config['name'],
                 url=config['url'],
                 type=ServiceType(config['type']),
                 timeout=timeout,
-                expected_status=config.get('expected_status', 200),
+                expected_status=expected_status,
                 custom_headers=config.get('custom_headers')
             ))
 

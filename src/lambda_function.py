@@ -5,7 +5,7 @@ import os
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Union
 
 import aiohttp
 
@@ -63,11 +63,17 @@ class Service:
     url: str
     type: ServiceType
     timeout: int = 30
-    expected_status: int = 200
+    expected_status: Union[int, List[int]] = 200
     custom_headers: Optional[Dict[str, str]] = None
     circuit_breaker: CircuitBreaker = field(default_factory=CircuitBreaker)
     retry_attempts: int = 3
     retry_delay: float = 1.0  # seconds
+
+    def is_status_valid(self, status: int) -> bool:
+        """Check if a status code matches the expected status(es)."""
+        if isinstance(self.expected_status, list):
+            return status in self.expected_status
+        return status == self.expected_status
 
 
 class HealthChecker:
@@ -125,8 +131,7 @@ class HealthChecker:
                         ssl=True
                 ) as response:
                     elapsed = (datetime.now() - start_time).total_seconds()
-                    expected_status = service.expected_status or 200
-                    is_healthy = response.status == service.expected_status
+                    is_healthy = service.is_status_valid(response.status)
 
                     if is_healthy:
                         service.circuit_breaker.record_success()
@@ -141,10 +146,11 @@ class HealthChecker:
                         "status": "healthy" if is_healthy else "unhealthy",
                         "response_time": elapsed,
                         "status_code": response.status,
-                        "expected_status": expected_status,
+                        "expected_status": service.expected_status,
                         "attempt": attempt + 1,
                         "timestamp": datetime.now().isoformat()
                     }
+
 
             except asyncio.TimeoutError:
                 logger.error(f"Timeout while checking {service.name} (attempt {attempt + 1})")

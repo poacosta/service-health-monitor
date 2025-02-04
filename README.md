@@ -74,7 +74,7 @@ services_config = [
     url             = "https://app.example.com"
     type            = "frontend"
     timeout         = 30
-    expected_status = 200
+    expected_status = [200, 429, 403]
   }
 ]
 ```
@@ -105,7 +105,7 @@ Each service in your `terraform.tfvars` can have:
 - `url`: Health check endpoint
 - `type`: "backend" or "frontend"
 - `timeout`: Request timeout in seconds (default: 30)
-- `expected_status`: Expected HTTP status (default: 200)
+- `expected_status`: Expected HTTP statuses (default: 200)
 - `custom_headers`: Additional HTTP headers
 
 ### Schedule Configuration
